@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -8,23 +10,42 @@ const getRandomReviews = () => getRandomNumber(5, 100)
 const getRandomStars = () =>
   Math.random() + getRandomNumber(3, 4)
 
-const Result = ({
-  date,
-  featured,
-  description,
-  href,
-  merchant,
-  price,
-  img,
-  title,
-}) => {
+export default function Detail() {
+  const [product, setProduct] = useState(null)
+  const router = useRouter()
+  const { id } = router.query
+
+  useEffect(() => {
+    if (!id) return null
+
+    fetch(`/api/search?id=${id}`)
+      .then((res) => res.json())
+      .then(setProduct)
+  }, [id])
+
+  if (!product) return null
+
+  const {
+    featured,
+    description,
+    href,
+    merchant,
+    price,
+    img,
+    title,
+  } = product
+
   return (
-    <a
-      className='relative hover:bg-blue-100 transition-colors flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-gray-50 bg-white hover:border-transparent'
-      href={href}
+    <div
+      className='relative items-center h-screen place-content-center transition-colors flex flex-col max-w-xs md:max-w-3xl mx-auto bg-white'
       target='_blank'
       rel='noopener noreferrer'
     >
+      <Link href='/'>
+        <a className='hover:bg-blue-100 p-2 rounded-lg'>
+          🔙 Volver a la portada
+        </a>
+      </Link>
       <div className='w-full md:w-1/3 grid place-items-center p-8'>
         <img
           width='240'
@@ -86,24 +107,6 @@ const Result = ({
           {price}
         </p>
       </div>
-    </a>
-  )
-}
-
-export default function HomeResults() {
-  const [homeResults, setHomeResults] = useState([])
-
-  useEffect(() => {
-    fetch('/api/offers')
-      .then((res) => res.json())
-      .then(setHomeResults)
-  }, [])
-
-  return (
-    <div className='flex flex-wrap mt-8 items-center justify-center place-content-center gap-8'>
-      {homeResults.map((result) => (
-        <Result key={result.id} {...result} />
-      ))}
     </div>
   )
 }

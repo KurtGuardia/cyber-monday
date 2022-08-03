@@ -1,7 +1,5 @@
 import Search from 'components/Search.jsx'
 import Head from 'next/head'
-// import Image from 'next/image'
-
 import Footer from '../components/Footer.jsx'
 import MainLogo from '../components/MainLogo.jsx'
 import HomeResults from '../components/HomeResults.jsx'

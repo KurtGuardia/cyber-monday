@@ -86,7 +86,6 @@ export default function Search(props) {
             {autocompleteState.collections.map(
               (collection, index) => {
                 const { items } = collection
-                console.log({ items })
                 return (
                   <section key={`section-${index}`}>
                     {items.length > 0 && (
